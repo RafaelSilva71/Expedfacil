@@ -5,16 +5,16 @@ import jakarta.persistence.*;
 import java.util.Objects;
 
 @Entity
-public class Role {
+public class TipoUsuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
 
-    public Role() {}
+    public TipoUsuario() {}
 
-    public Role(Long id, String name) {
+    public TipoUsuario(Long id, String name) {
         this.id=id;
         this.name=name;
     }
@@ -39,7 +39,7 @@ public class Role {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Role role = (Role) o;
+        TipoUsuario role = (TipoUsuario) o;
         return Objects.equals(id, role.id) && Objects.equals(name, role.name);
     }
 

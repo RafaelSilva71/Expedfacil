@@ -14,17 +14,18 @@ public class Produto {
     private String codigo;
     private String descricao;
     private String lote;
-    private int quantidade;
+    private Integer  quantidade;
     private String localEstoque;
 
     public Produto() {}
 
-    public Produto(Long id, String codigo, String descricao, String lote, int quantidade) {
+    public Produto(Long id, String codigo, String descricao, String lote, Integer  quantidade, String localEstoque) {
         this.id = id;
         this.codigo = codigo;
         this.descricao = descricao;
         this.lote = lote;
         this.quantidade = quantidade;
+        this.localEstoque = localEstoque;
     }
 
     public Long getId() {
@@ -32,7 +33,7 @@ public class Produto {
     }
 
     public void setId(Long id) {
-        id = id;
+        this.id = id;
     }
 
     public String getCodigo() {
@@ -51,11 +52,11 @@ public class Produto {
         this.descricao = descricao;
     }
 
-    public int getQuantidade() {
+    public Integer getQuantidade() {
         return quantidade;
     }
 
-    public void setQuantidade(int quantidade) {
+    public void setQuantidade(Integer quantidade) {
         this.quantidade = quantidade;
     }
 
