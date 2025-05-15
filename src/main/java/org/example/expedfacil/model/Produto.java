@@ -7,6 +7,7 @@ import java.util.Objects;
 @Entity
 public class Produto {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -100,4 +101,6 @@ public class Produto {
                 ", localEstoque='" + localEstoque + '\'' +
                 '}';
     }
+
+
 }
