@@ -8,3 +8,20 @@ SCRIP TESTE DO BANCO DE DADOS PARA O POST: @RICARDO
     "quantidade": 1,
     "localEstoque": "Orizona"
 }
+
+scrip para Teste para atualizar {
+
+{
+
+    "codigo": "20",
+    "descricao": "tomate verde",
+    "lote": "15",
+    "quantidade": 240,
+    "localEstoque": "Vianopolis"
+}
+
+
+
+
+
+}

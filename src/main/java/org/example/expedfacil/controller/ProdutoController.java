@@ -5,6 +5,8 @@ import org.example.expedfacil.service.ProdutoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/Produto")
 public class ProdutoController {
@@ -29,4 +31,24 @@ public class ProdutoController {
         }
         return ResponseEntity.notFound().build();
     }
+    @GetMapping
+    public ResponseEntity<List<Produto>> getAllProdutos() {
+      var produto =   produtoService.ListarProdutos();
+      return ResponseEntity.ok(produto);
+    }
+
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateProdutoById(@PathVariable Long id, @RequestBody UpdateProdutoDTO dto) {
+        produtoService.updateProduto(id, dto);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable("id") String id) {
+    produtoService.deleteById(Long.valueOf(id));
+    return ResponseEntity.noContent().build();
+    }
+
 }
