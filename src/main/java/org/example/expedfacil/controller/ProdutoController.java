@@ -18,13 +18,13 @@ public class ProdutoController {
     }
 
     @PostMapping
-    public ResponseEntity<Long> createProduto(@RequestBody CreateProdutoDTO dto) {
+    public ResponseEntity<String> createProduto(@RequestBody CreateProdutoDTO dto) {
         Produto newProduto = produtoService.createProduto(dto);
         return ResponseEntity.ok(newProduto.getId());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Produto> getProdutoById(@PathVariable Long id) {
+    public ResponseEntity<Produto> getProdutoById(@PathVariable String id) {
         Produto produto = produtoService.buscarPorId(id);
         if (produto != null) {
             return ResponseEntity.ok(produto);
@@ -40,14 +40,14 @@ public class ProdutoController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateProdutoById(@PathVariable Long id, @RequestBody UpdateProdutoDTO dto) {
+    public ResponseEntity<Void> updateProdutoById(@PathVariable String id, @RequestBody UpdateProdutoDTO dto) {
         produtoService.updateProduto(id, dto);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable("id") String id) {
-    produtoService.deleteById(Long.valueOf(id));
+    produtoService.deleteById(String.valueOf(id));
     return ResponseEntity.noContent().build();
     }
 

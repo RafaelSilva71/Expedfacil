@@ -9,72 +9,52 @@ public class Produto {
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(nullable = false, unique = true)
+    private String id;
 
-    private String codigo;
-    private String descricao;
-    private String lote;
-    private Integer  quantidade;
-    private String localEstoque;
+    private String nome;
+    private Integer  quantPorCaixa; //quantidade de caixa (lata dentro de uma caixa) (MV DIA% 24/200)
+    private Integer quantCxFd; //CaixaTotal (CX)
 
     public Produto() {}
 
-    public Produto(Long id, String codigo, String descricao, String lote, Integer  quantidade, String localEstoque) {
+    public Produto(String id, String nome, Integer quantPorCaixa, Integer quantCxFd) {
         this.id = id;
-        this.codigo = codigo;
-        this.descricao = descricao;
-        this.lote = lote;
-        this.quantidade = quantidade;
-        this.localEstoque = localEstoque;
+        this.nome = nome;
+        this.quantPorCaixa = quantPorCaixa;
+        this.quantCxFd = quantCxFd;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public String getCodigo() {
-        return codigo;
+    public String getNome() {
+        return nome;
     }
 
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
-    public String getDescricao() {
-        return descricao;
+    public Integer getQuantPorCaixa() {
+        return quantPorCaixa;
     }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
+    public void setQuantPorCaixa(Integer quantPorCaixa) {
+        this.quantPorCaixa = quantPorCaixa;
     }
 
-    public Integer getQuantidade() {
-        return quantidade;
+    public Integer getQuantCxFd() {
+        return quantCxFd;
     }
 
-    public void setQuantidade(Integer quantidade) {
-        this.quantidade = quantidade;
-    }
-
-    public String getLote() {
-        return lote;
-    }
-
-    public void setLote(String lote) {
-        this.lote = lote;
-    }
-
-    public String getLocalEstoque() {
-        return localEstoque;
-    }
-
-    public void setLocalEstoque(String localEstoque) {
-        this.localEstoque = localEstoque;
+    public void setQuantCxFd(Integer quantCxFd) {
+        this.quantCxFd = quantCxFd;
     }
 
     @Override
@@ -82,25 +62,21 @@ public class Produto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Produto produto = (Produto) o;
-        return quantidade == produto.quantidade && Objects.equals(id, produto.id) && Objects.equals(codigo, produto.codigo) && Objects.equals(descricao, produto.descricao) && Objects.equals(lote, produto.lote) && Objects.equals(localEstoque, produto.localEstoque);
+        return Objects.equals(id, produto.id) && Objects.equals(nome, produto.nome) && Objects.equals(quantPorCaixa, produto.quantPorCaixa) && Objects.equals(quantCxFd, produto.quantCxFd);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, codigo, descricao, lote, quantidade, localEstoque);
+        return Objects.hash(id, nome, quantPorCaixa, quantCxFd);
     }
 
     @Override
     public String toString() {
         return "Produto{" +
-                "Id=" + id +
-                ", codigo='" + codigo + '\'' +
-                ", descricao='" + descricao + '\'' +
-                ", lote='" + lote + '\'' +
-                ", quantidade=" + quantidade +
-                ", localEstoque='" + localEstoque + '\'' +
+                "id='" + id + '\'' +
+                ", nome='" + nome + '\'' +
+                ", quantPorCaixa=" + quantPorCaixa +
+                ", quantCxFd='" + quantCxFd + '\'' +
                 '}';
     }
-
-
 }

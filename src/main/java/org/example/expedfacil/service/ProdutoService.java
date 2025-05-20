@@ -24,18 +24,16 @@ public class ProdutoService {
         //DTO -> entity
 
         var entity = new Produto(
-                null,
-                createProdutoDTO.codigo(),
-                createProdutoDTO.descricao(),
-                createProdutoDTO.lote(),
-                createProdutoDTO. quantidade(),
-                createProdutoDTO.localEstoque()
+                createProdutoDTO.id(),
+                createProdutoDTO.nome(),
+                createProdutoDTO.quantPorCaixa(),
+                createProdutoDTO.quantCxFd()
         );
 
         return produtoRepository.save(entity);
     }
 
-    public Produto buscarPorId(Long id) {
+    public Produto buscarPorId(String id) {
         return produtoRepository.findById(id).orElse(null);
     }
 
@@ -46,26 +44,21 @@ public class ProdutoService {
 
 
 
-    public void updateProduto(Long id, UpdateProdutoDTO dto) {
+    public void updateProduto(String id, UpdateProdutoDTO dto) {
         Produto produto = produtoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
 
 
-        produto.setCodigo(dto.codigo());
-        produto.setDescricao(dto.descricao());
-        produto.setLote(dto.lote());
-        produto.setQuantidade(dto.quantidade());
-        produto.setLocalEstoque(dto.localEstoque());
+        produto.setNome(dto.nome());
+        produto.setQuantPorCaixa(dto.quantPorCaixa());
+        produto.setQuantCxFd(dto.quantCxFd());
 
 
         produtoRepository.save(produto);
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(String id) {
         produtoRepository.deleteById(id);
     }
-
-
-
 
 }
