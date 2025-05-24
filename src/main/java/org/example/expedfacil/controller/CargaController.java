@@ -48,5 +48,4 @@ public class CargaController {
         return ResponseEntity.noContent().build();
     }
 
-
 }

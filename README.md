@@ -1,3 +1,43 @@
+## 📦 Endpoints da API ExpedFácil
+
+### 🔧 Carga
+
+| Método | Endpoint         | Descrição                                                    |
+|--------|------------------|--------------------------------------------------------------|
+| POST   | `/carga`         | Cria uma nova carga com entregas e produtos                 |
+| GET    | `/carga`         | Lista todas as cargas cadastradas                           |
+| GET    | `/carga/{id}`    | Retorna os detalhes completos de uma carga específica       |
+| DELETE | `/carga/{id}`    | Remove uma carga existente pelo número de embarque          |
+
+---
+
+### 📍 Local de Estoque
+
+| Método | Endpoint                                   | Descrição                                                                 |
+|--------|--------------------------------------------|---------------------------------------------------------------------------|
+| GET    | `/local-estoque`                           | Lista todos os produtos de todas as cargas com cálculo de estoque         |
+| GET    | `/local-estoque/carga/{numeroEmbarque}`    | Lista os produtos com cálculo de uma carga específica                     |
+| PUT    | `/local-estoque/{id}`                      | Atualiza manualmente o campo `localEstoque` de um produto (texto simples) |
+
+---
+
+### 🧾 Produto (Catálogo)
+
+| Método | Endpoint             | Descrição                                                       |
+|--------|----------------------|------------------------------------------------------------------|
+| POST   | `/Produto`           | Cadastra um novo produto individual no catálogo                 |
+| GET    | `/Produto`           | Lista todos os produtos cadastrados no catálogo                 |
+| GET    | `/Produto/{id}`      | Retorna os detalhes de um produto pelo ID                       |
+| PUT    | `/Produto/{id}`      | Atualiza um produto existente com base no ID                    |
+| DELETE | `/Produto/{id}`      | Remove um produto do catálogo pelo ID                           |
+
+
+
+
+
+
+
+
 CORRETO - PRODUTO
 {
     "id": "006971.93",

@@ -1,18 +1,19 @@
 package org.example.expedfacil.service;
 
 /** Imports */
+import org.example.expedfacil.controller.*;
 import org.example.expedfacil.model.*;
-import org.example.expedfacil.controller.CreateCargaDTO;
-import org.example.expedfacil.controller.EntregaDTO;
-import org.example.expedfacil.controller.ProdutoEntregaDTO;
 import org.example.expedfacil.repository.CargaRepository;
+import org.example.expedfacil.repository.LocalEstoqueProdutoRepository;
 import org.example.expedfacil.repository.ProdutoRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Classe responsável por conter a lógica de negócio relacionada à entidade Carga.
@@ -32,6 +33,11 @@ public class CargaService {
 
     @Autowired
     private ProdutoRepository produtoRepository;
+
+    @Autowired
+    private LocalEstoqueProdutoRepository localEstoqueProdutoRepository;
+
+
 
     public Carga create(CreateCargaDTO dto) {
         // Primeiro verificar se já existe carga com esse numero de embarque
@@ -110,8 +116,78 @@ public class CargaService {
         // Setar entregas na carga
         carga.setEntregas(listaEntregas);
 
+        // Chamar metodo de Local estoque
+        this.gerarResumoLocalEstoque(carga);
+
         // Salvar tudo no banco e retornar
         return cargaRepository.save(carga);
 
     }
+
+    public LocalEstoqueDTO gerarResumoLocalEstoque(Carga carga) {
+        Map<String, Integer> totaisPorProduto = new HashMap<>();
+
+        // 1. Somar total de caixas por produto em todas as entregas da carga
+        for (Entrega entrega : carga.getEntregas()) {
+            for (ProdutoEntrega produto : entrega.getProdutos()) {
+                totaisPorProduto.merge(
+                        produto.getCodigoProduto(),
+                        produto.getQuantidadeCaixas(),
+                        Integer::sum
+                );
+            }
+        }
+
+        // 2. Montar lista de DTOs para visualização
+        List<ResumoProdutoLocalDTO> listaResumo = new ArrayList<>();
+
+        // 3. Montar lista de entidades para salvar no banco
+        List<LocalEstoqueProduto> entidades = new ArrayList<>();
+
+        for (Map.Entry<String, Integer> entry : totaisPorProduto.entrySet()) {
+            String codigo = entry.getKey();
+            int totalCaixas = entry.getValue();
+
+            Produto produtoCatalogo = produtoRepository.findById(codigo)
+                    .orElseThrow(() -> new RuntimeException("Produto não encontrado: " + codigo));
+
+            int divisor = produtoCatalogo.getQuantCxFd();
+            int inteiro = totalCaixas / divisor;
+            int resto = totalCaixas % divisor;
+
+            String resultado = inteiro + " e mais " + resto + " = " + totalCaixas;
+
+            // DTO para exibição
+            ResumoProdutoLocalDTO dto = new ResumoProdutoLocalDTO();
+            dto.setCodigoProduto(codigo);
+            dto.setNomeProduto(produtoCatalogo.getNome());
+            dto.setResultado(resultado);
+            dto.setLocalEstoque(null); // ainda não atribuído
+
+            listaResumo.add(dto);
+
+            // Entidade para salvar
+            LocalEstoqueProduto entidade = new LocalEstoqueProduto();
+            entidade.setNumeroEmbarque(carga.getNumeroEmbarque());
+            entidade.setCodigoProduto(codigo);
+            entidade.setNomeProduto(produtoCatalogo.getNome());
+            entidade.setResultadoCalculo(resultado);
+            entidade.setLocalEstoque(null); // será preenchido depois
+
+            entidades.add(entidade);
+        }
+
+        // 4. Salvar todas as entidades no banco
+        localEstoqueProdutoRepository.saveAll(entidades);
+
+        // 5. Retornar o DTO com a lista formatada (opcional, para exibição)
+        LocalEstoqueDTO localEstoqueDTO = new LocalEstoqueDTO();
+        localEstoqueDTO.setNumeroEmbarque(carga.getNumeroEmbarque());
+        localEstoqueDTO.setProdutos(listaResumo);
+
+        return localEstoqueDTO;
+    }
+
+
+
 }
