@@ -1,5 +1,7 @@
 package org.example.expedfacil.controller;
 
+import org.example.expedfacil.controller.dto.CreateProdutoDTO;
+import org.example.expedfacil.controller.dto.UpdateProdutoDTO;
 import org.example.expedfacil.model.Produto;
 import org.example.expedfacil.service.ProdutoService;
 import org.springframework.http.ResponseEntity;

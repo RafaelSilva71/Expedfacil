@@ -1,4 +1,4 @@
-package org.example.expedfacil.model;
+package org.example.expedfacil.model.enums;
 
 public enum StatusCarga {
     CRIADA,

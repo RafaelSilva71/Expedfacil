@@ -1,14 +1,12 @@
 package org.example.expedfacil.service;
 
-import org.example.expedfacil.controller.CreateProdutoDTO;
-import org.example.expedfacil.controller.UpdateProdutoDTO;
+import org.example.expedfacil.controller.dto.CreateProdutoDTO;
+import org.example.expedfacil.controller.dto.UpdateProdutoDTO;
 import org.example.expedfacil.model.Produto;
 import org.example.expedfacil.repository.ProdutoRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class ProdutoService {

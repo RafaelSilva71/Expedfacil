@@ -1,5 +1,6 @@
 package org.example.expedfacil.controller;
 
+import org.example.expedfacil.controller.dto.CreateCargaDTO;
 import org.example.expedfacil.model.Carga;
 import org.example.expedfacil.repository.CargaRepository;
 import org.example.expedfacil.service.CargaService;

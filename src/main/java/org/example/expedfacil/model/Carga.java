@@ -2,6 +2,11 @@ package org.example.expedfacil.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import org.example.expedfacil.model.enums.StatusCarga;
+import org.example.expedfacil.model.enums.TipoCarga;
+import org.example.expedfacil.model.enums.TipoCarregamento;
+import org.example.expedfacil.model.enums.TipoVeiculo;
+
 import java.time.LocalDateTime;
 import java.util.List;
 

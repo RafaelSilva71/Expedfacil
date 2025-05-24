@@ -1,6 +1,4 @@
-package org.example.expedfacil.controller;
-
-import jakarta.validation.constraints.NotNull;
+package org.example.expedfacil.controller.dto;
 
 public record UpdateProdutoDTO(
         String id,

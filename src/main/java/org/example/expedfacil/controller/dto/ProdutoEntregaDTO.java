@@ -1,4 +1,4 @@
-package org.example.expedfacil.controller;
+package org.example.expedfacil.controller.dto;
 
 /**
  * Representa os dados de um produto enviados pelo usuário

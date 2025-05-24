@@ -1,8 +1,9 @@
 package org.example.expedfacil.service;
 
 /** Imports */
-import org.example.expedfacil.controller.*;
+import org.example.expedfacil.controller.dto.*;
 import org.example.expedfacil.model.*;
+import org.example.expedfacil.model.enums.*;
 import org.example.expedfacil.repository.CargaRepository;
 import org.example.expedfacil.repository.LocalEstoqueProdutoRepository;
 import org.example.expedfacil.repository.ProdutoRepository;
@@ -155,7 +156,7 @@ public class CargaService {
             int inteiro = totalCaixas / divisor;
             int resto = totalCaixas % divisor;
 
-            String resultado = inteiro + " e mais " + resto + " = " + totalCaixas;
+            String resultado = inteiro + "Paletes e mais " + resto + " = " + totalCaixas;
 
             // DTO para exibição
             ResumoProdutoLocalDTO dto = new ResumoProdutoLocalDTO();

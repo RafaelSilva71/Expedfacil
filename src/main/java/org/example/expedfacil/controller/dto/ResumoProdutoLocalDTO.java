@@ -1,4 +1,4 @@
-package org.example.expedfacil.controller;
+package org.example.expedfacil.controller.dto;
 
 public class ResumoProdutoLocalDTO {
 
