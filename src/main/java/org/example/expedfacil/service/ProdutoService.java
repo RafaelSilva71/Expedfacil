@@ -6,6 +6,7 @@ import org.example.expedfacil.model.Produto;
 import org.example.expedfacil.repository.ProdutoRepository;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
@@ -20,6 +21,8 @@ public class ProdutoService {
     }
 
     public Produto createProduto(CreateProdutoDTO createProdutoDTO) {
+        DecimalFormat df = new DecimalFormat("000000.00");
+        String codigoFormatado = df.format(Double.parseDouble(createProdutoDTO.id()));
 
         //DTO -> entity
 
@@ -40,8 +43,6 @@ public class ProdutoService {
     public List<Produto> ListarProdutos() {
         return produtoRepository.findAll();
     }
-
-
 
 
     public void updateProduto(String id, UpdateProdutoDTO dto) {

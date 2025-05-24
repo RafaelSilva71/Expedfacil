@@ -6,7 +6,14 @@ CORRETO
     "quantCxFd": 126
 }
 
+MongoDB------
+POST
 
+    localhost:8080/arquivo/upload
+    Body -> form-data -> file -> arquivo -> description
 
+GET
 
+    desmarca o file ->
+    localhost:8080/arquivo/682f7829d3955967e4e366b5 (ID da imagem gerada no postman ou no proprio MongoDB Compass)
 
