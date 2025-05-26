@@ -2,6 +2,7 @@ package org.example.expedfacil.controller;
 
 import org.example.expedfacil.controller.dto.CreateCargaDTO;
 import org.example.expedfacil.model.Carga;
+import org.example.expedfacil.model.ProdutoEntrega;
 import org.example.expedfacil.repository.CargaRepository;
 import org.example.expedfacil.service.CargaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,5 +49,14 @@ public class CargaController {
         cargaRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/placas/{id}")
+    public ResponseEntity<List<String>> listarPlacas(@PathVariable String id) {
+        return cargaRepository.findById(id)
+                .map(carga -> ResponseEntity.ok(carga.getPlacasCarreta()))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+
 
 }

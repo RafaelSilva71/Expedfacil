@@ -117,11 +117,20 @@ public class CargaService {
         // Setar entregas na carga
         carga.setEntregas(listaEntregas);
 
-        // Chamar metodo de Local estoque
-        this.gerarResumoLocalEstoque(carga);
+        // 1. Salvar a carga primeiro
+        Carga cargaSalva = cargaRepository.save(carga);
 
-        // Salvar tudo no banco e retornar
-        return cargaRepository.save(carga);
+        // 2. Só agora, gerar e salvar os produtos com base nessa carga salva
+        this.gerarResumoLocalEstoque(cargaSalva);
+
+        // 3. Retornar a carga salva (opcional: ou retornar com resumo junto, se quiser)
+        return cargaSalva;
+
+//        // Chamar metodo de Local estoque
+//        this.gerarResumoLocalEstoque(carga);
+//
+//        // Salvar tudo no banco e retornar
+//        return cargaRepository.save(carga);
 
     }
 
@@ -152,11 +161,14 @@ public class CargaService {
             Produto produtoCatalogo = produtoRepository.findById(codigo)
                     .orElseThrow(() -> new RuntimeException("Produto não encontrado: " + codigo));
 
-            int divisor = produtoCatalogo.getQuantCxFd();
+            Integer divisor = produtoCatalogo.getQuantCxFd();
+            if (divisor == null || divisor == 0) {
+                divisor = 1;
+            }
             int inteiro = totalCaixas / divisor;
             int resto = totalCaixas % divisor;
 
-            String resultado = inteiro + "Paletes e mais " + resto + " = " + totalCaixas;
+            String resultado = inteiro + "Paletes e mais " + resto + "CX/FD = " + totalCaixas;
 
             // DTO para exibição
             ResumoProdutoLocalDTO dto = new ResumoProdutoLocalDTO();

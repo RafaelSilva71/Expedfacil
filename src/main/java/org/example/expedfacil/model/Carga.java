@@ -8,6 +8,7 @@ import org.example.expedfacil.model.enums.TipoCarregamento;
 import org.example.expedfacil.model.enums.TipoVeiculo;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,7 +41,8 @@ public class Carga {
     private String placaCavalo;
 
     @ElementCollection
-    private List<String> placasCarreta;
+    private List<String> placasCarreta = new ArrayList<>();
+
 
     private String nomeMotorista;
 

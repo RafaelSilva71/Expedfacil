@@ -20,7 +20,8 @@ CREATE TABLE carga (
 -- Tabela auxiliar para a lista de placas da carreta
 CREATE TABLE carga_placas_carreta (
                                       carga_numero_embarque VARCHAR(255),
-                                      placa VARCHAR(20),
-                                      PRIMARY KEY (carga_numero_embarque, placa),
+                                      placas_carreta VARCHAR(20),
+                                      PRIMARY KEY (carga_numero_embarque, placas_carreta),
                                       FOREIGN KEY (carga_numero_embarque) REFERENCES carga(numero_embarque) ON DELETE CASCADE
 );
+
