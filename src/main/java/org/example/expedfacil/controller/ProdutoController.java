@@ -1,6 +1,7 @@
 package org.example.expedfacil.controller;
 
-import jakarta.validation.Valid;
+import org.example.expedfacil.controller.dto.CreateProdutoDTO;
+import org.example.expedfacil.controller.dto.UpdateProdutoDTO;
 import org.example.expedfacil.model.Produto;
 import org.example.expedfacil.service.ProdutoService;
 import org.springframework.http.ResponseEntity;
@@ -12,27 +13,44 @@ import java.util.List;
 @RequestMapping("/Produto")
 public class ProdutoController {
 
-    private ProdutoService produtoService;
+    private final ProdutoService produtoService;
 
     public ProdutoController(ProdutoService produtoService) {
         this.produtoService = produtoService;
     }
 
     @PostMapping
-    public ResponseEntity<Long> createProduto(@RequestBody @Valid CreateProdutoDTO createProdutoDTO) {
-        Produto newProduto = produtoService.createProduto(createProdutoDTO);
+    public ResponseEntity<String> createProduto(@RequestBody CreateProdutoDTO dto) {
+        Produto newProduto = produtoService.createProduto(dto);
         return ResponseEntity.ok(newProduto.getId());
-
     }
+
     @GetMapping("/{id}")
-    public ResponseEntity<Produto> getProdutoById(@PathVariable("id") Long id) {
-       Produto produto = produtoService.buscarPorId(id);
-       if(produto != null) {
-           return ResponseEntity.ok(produto);
-       } else {
-           return ResponseEntity.notFound().build();
-       }
+    public ResponseEntity<Produto> getProdutoById(@PathVariable String id) {
+        Produto produto = produtoService.buscarPorId(id);
+        if (produto != null) {
+            return ResponseEntity.ok(produto);
+        }
+        return ResponseEntity.notFound().build();
+    }
+    @GetMapping
+    public ResponseEntity<List<Produto>> getAllProdutos() {
+        var produto =   produtoService.ListarProdutos();
+        return ResponseEntity.ok(produto);
     }
 
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateProdutoById(@PathVariable String id, @RequestBody UpdateProdutoDTO dto) {
+        produtoService.updateProduto(id, dto);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable("id") String id) {
+        produtoService.deleteById(String.valueOf(id));
+        return ResponseEntity.noContent().build();
+    }
 
 }
