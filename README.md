@@ -45,6 +45,45 @@ CORRETO - PRODUTO
     "quantPorCaixa": 24,
     "quantCxFd": 126
 }
+Lista de produtos necessárioa para a carga:
+{
+"id": "005603.94",
+"nome": "MV ODERICH 6/2000 (CX)",
+"quantPorCaixa": 6,
+"quantCxFd": 56
+}
+{
+"id": "005403.94",
+"nome": "ERV ODERICH 6/2000 (CX)",
+"quantPorCaixa": 6,
+"quantCxFd": 56
+}
+{
+"id": "005602.94",
+"nome": "MV ODERICH 12/500 (CX)",
+"quantPorCaixa": 12,
+"quantCxFd": 110
+}
+{
+"id": "005402.94",
+"nome": "ERV ODERICH 12/500 (CX)",
+"quantPorCaixa": 12,
+"quantCxFd": 110
+}
+{
+"id": "005601.96",
+"nome": "MV ODERICH 24/200 (FD)",
+"quantPorCaixa": 24,
+"quantCxFd": 140
+}
+{
+"id": "005401.96",
+"nome": "ERV ODERICH 24/200 (FD)",
+"quantPorCaixa": 24,
+"quantCxFd": 140
+}
+
+
 CORRETO - CARGA (EXEMPLO COM 3 ENTREGAS)
 
 {
