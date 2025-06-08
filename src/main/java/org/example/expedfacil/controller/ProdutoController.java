@@ -3,20 +3,26 @@ package org.example.expedfacil.controller;
 import org.example.expedfacil.controller.dto.CreateProdutoDTO;
 import org.example.expedfacil.controller.dto.UpdateProdutoDTO;
 import org.example.expedfacil.model.Produto;
+import org.example.expedfacil.service.CargaService;
 import org.example.expedfacil.service.ProdutoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @RestController
 @RequestMapping("/Produto")
 public class ProdutoController {
 
     private final ProdutoService produtoService;
+    private final CargaService cargaService;
 
-    public ProdutoController(ProdutoService produtoService) {
+    public ProdutoController(ProdutoService produtoService, CargaService cargaService) {
         this.produtoService = produtoService;
+        this.cargaService = cargaService;
     }
 
     @PostMapping
@@ -37,6 +43,7 @@ public class ProdutoController {
     public ResponseEntity<List<Produto>> getAllProdutos() {
       var produto =   produtoService.ListarProdutos();
       return ResponseEntity.ok(produto);
+
     }
 
 

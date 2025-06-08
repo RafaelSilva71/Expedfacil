@@ -68,4 +68,5 @@ public class ProdutoEntrega {
     public void setEntrega(Entrega entrega) {
         this.entrega = entrega;
     }
+
 }

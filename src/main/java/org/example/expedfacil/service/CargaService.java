@@ -11,6 +11,9 @@ import org.example.expedfacil.repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -81,33 +84,34 @@ public class CargaService {
             pesoTotalLiquido += entregaDTO.getPesoLiquido();
             pesoTotalBruto += entregaDTO.getPesoBruto();
 
-            List<ProdutoEntrega> listaProdutos = new ArrayList<>();
-            int totalCaixasEntrega = 0;
+            // ---------------------------Implementação do HATOAES -------------------------------------
+                List<ProdutoEntrega> listaProdutos = new ArrayList<>();
+                int totalCaixasEntrega = 0;
 
-            for (ProdutoEntregaDTO produtoDTO : entregaDTO.getProdutos()) {   //Percorre os produtos de cada entrega
-                ProdutoEntrega produto = new ProdutoEntrega();
-                produto.setCodigoProduto(produtoDTO.getCodigoProduto());
+                for (ProdutoEntregaDTO produtoDTO : entregaDTO.getProdutos()) {   //Percorre os produtos de cada entrega
+                    ProdutoEntrega produto = new ProdutoEntrega();
+                    produto.setCodigoProduto(produtoDTO.getCodigoProduto());
 
-                // Buscar o nome do produto a partir do código
-                Produto produtoCatalogo = produtoRepository.findById(produtoDTO.getCodigoProduto())
-                        .orElseThrow(() -> new RuntimeException("Produto não encontrado: " + produtoDTO.getCodigoProduto()));
+                    // Buscar o nome do produto a partir do código
+                    Produto produtoCatalogo = produtoRepository.findById(produtoDTO.getCodigoProduto())
+                            .orElseThrow(() -> new RuntimeException("Produto não encontrado: " + produtoDTO.getCodigoProduto()));
 
-                produto.setNomeProduto(produtoCatalogo.getNome());
-                produto.setQuantidadeCaixas(produtoDTO.getQuantidadeCaixas());
-                produto.setEntrega(entrega);                                    // Liga o produto à entrega correta
+                    produto.setNomeProduto(produtoCatalogo.getNome());
+                    produto.setQuantidadeCaixas(produtoDTO.getQuantidadeCaixas());
+                    produto.setEntrega(entrega);                                    // Liga o produto à entrega correta
 
-                listaProdutos.add(produto);
+                    listaProdutos.add(produto);
 
-                totalCaixasEntrega += produtoDTO.getQuantidadeCaixas();
+                    totalCaixasEntrega += produtoDTO.getQuantidadeCaixas();
+                }
+
+                entrega.setProdutos(listaProdutos);
+                entrega.setQuantidadeTotalCaixas(totalCaixasEntrega);
+
+                totalCaixasCarga += totalCaixasEntrega;
+
+                listaEntregas.add(entrega);
             }
-
-            entrega.setProdutos(listaProdutos);
-            entrega.setQuantidadeTotalCaixas(totalCaixasEntrega);
-
-            totalCaixasCarga += totalCaixasEntrega;
-
-            listaEntregas.add(entrega);
-        }
 
         // Setar totais calculados na carga
         carga.setPesoTotalLiquido(pesoTotalLiquido);

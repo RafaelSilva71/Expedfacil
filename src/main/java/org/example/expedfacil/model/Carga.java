@@ -25,7 +25,6 @@ public class Carga {
 
     @Id
     private String numeroEmbarque; // chave primária manual
-
     private String destino;
 
     private Integer numeroEntregas;
