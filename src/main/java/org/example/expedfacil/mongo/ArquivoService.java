@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.gridfs.GridFsOperations;
+import com.mongodb.client.gridfs.model.GridFSFile;
 
 import java.io.IOException;
 
@@ -19,9 +21,12 @@ public class ArquivoService {
     @Autowired
     private GridFsTemplate gridFsTemplate;
 
-    public String salvarArquivo(MultipartFile file, String descricao) throws IOException {
+    @Autowired
+    private GridFsOperations gridFsOperations;
+
+    public String salvarNotaFiscalComNumeroEmbarque(MultipartFile file, String numeroEmbarque) throws IOException {
         DBObject metaData = new BasicDBObject();
-        metaData.put("descricao", descricao);
+        metaData.put("numeroEmbarque", numeroEmbarque);
         metaData.put("tipo", file.getContentType());
 
         ObjectId id = gridFsTemplate.store(
@@ -31,14 +36,17 @@ public class ArquivoService {
                 metaData
         );
 
-        System.out.println("Arquivo salvo com ID: " + id.toString());
-
         return id.toString();
     }
 
     public GridFsResource buscarArquivoPorId(String id) {
-        return gridFsTemplate.getResource(
-                gridFsTemplate.findOne(Query.query(Criteria.where("_id").is(new ObjectId(id))))
-        );
+        GridFSFile file = gridFsTemplate.findOne(Query.query(Criteria.where("_id").is(new ObjectId(id))));
+        return file != null ? gridFsOperations.getResource(file) : null;
+    }
+
+    public GridFsResource buscarNotaFiscalPorNumeroEmbarque(String numeroEmbarque) {
+        Query query = new Query(Criteria.where("metadata.numeroEmbarque").is(numeroEmbarque));
+        GridFSFile file = gridFsTemplate.findOne(query);
+        return file != null ? gridFsOperations.getResource(file) : null;
     }
 }

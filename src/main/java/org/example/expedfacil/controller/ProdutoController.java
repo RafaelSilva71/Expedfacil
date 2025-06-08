@@ -1,5 +1,6 @@
 package org.example.expedfacil.controller;
 
+import jakarta.validation.Valid;
 import org.example.expedfacil.controller.dto.CreateProdutoDTO;
 import org.example.expedfacil.controller.dto.UpdateProdutoDTO;
 import org.example.expedfacil.model.Produto;
@@ -20,8 +21,8 @@ public class ProdutoController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createProduto(@RequestBody CreateProdutoDTO dto) {
-        Produto newProduto = produtoService.createProduto(dto);
+    public ResponseEntity<String> createProduto(@RequestBody @Valid CreateProdutoDTO dto) {
+        var newProduto = produtoService.createProduto(dto);
         return ResponseEntity.ok(newProduto.getId());
     }
 
@@ -38,7 +39,6 @@ public class ProdutoController {
         var produto =   produtoService.ListarProdutos();
         return ResponseEntity.ok(produto);
     }
-
 
 
     @PutMapping("/{id}")

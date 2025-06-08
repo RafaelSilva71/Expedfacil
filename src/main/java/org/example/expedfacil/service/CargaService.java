@@ -9,12 +9,12 @@ import org.example.expedfacil.repository.LocalEstoqueProdutoRepository;
 import org.example.expedfacil.repository.ProdutoRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Classe responsável por conter a lógica de negócio relacionada à entidade Carga.
@@ -38,8 +38,24 @@ public class CargaService {
     @Autowired
     private LocalEstoqueProdutoRepository localEstoqueProdutoRepository;
 
+    //Configuração da leitura da carga e do produto em cache e buscando eles no cache
+    @Cacheable(value = "cargas", key="#numeroEmbarque")
+    public Optional<Carga> findByNumeroEmbarque(String numeroEmbarque) {
+        System.out.println("DEBUG: Buscando carga em barque: '" + numeroEmbarque + "' no banco de dados (cache expirado/ausente)");
+        return cargaRepository.findById(numeroEmbarque);
+    }
 
+    @Cacheable(value = "produtos", key = "#codigoProduto")
+    public Optional<Produto> findProdutoByCodigo(String codigoProduto) {
+        System.out.println("DEBUG: Buscando produto em barque: '" + codigoProduto + "'no no banco de dados (cache expirado/ausente)");
+        return produtoRepository.findById(codigoProduto);
+    }
 
+    //Se uma nova carga é criada, a antiga (se existir) deve ser invalidada
+    @Caching(evict = {
+            @CacheEvict(value = "cargas", key = "#dto.numeroEmbarque"),
+            @CacheEvict(value = "cargas", allEntries = true)
+    })
     public Carga create(CreateCargaDTO dto) {
         // Primeiro verificar se já existe carga com esse numero de embarque
         if (cargaRepository.existsById(dto.getNumeroEmbarque())) {
@@ -88,8 +104,8 @@ public class CargaService {
                 ProdutoEntrega produto = new ProdutoEntrega();
                 produto.setCodigoProduto(produtoDTO.getCodigoProduto());
 
-                // Buscar o nome do produto a partir do código
-                Produto produtoCatalogo = produtoRepository.findById(produtoDTO.getCodigoProduto())
+                // **** AQUI USAMOS O NOVO MÉTODO findProdutoByCodigo COM CACHE ****
+                Produto produtoCatalogo = findProdutoByCodigo(produtoDTO.getCodigoProduto())
                         .orElseThrow(() -> new RuntimeException("Produto não encontrado: " + produtoDTO.getCodigoProduto()));
 
                 produto.setNomeProduto(produtoCatalogo.getNome());
@@ -117,14 +133,14 @@ public class CargaService {
         // Setar entregas na carga
         carga.setEntregas(listaEntregas);
 
-        // Chamar metodo de Local estoque
-        this.gerarResumoLocalEstoque(carga);
+        Carga cargaSalva = cargaRepository.save(carga);
 
-        // Salvar tudo no banco e retornar
-        return cargaRepository.save(carga);
+        this.gerarResumoLocalEstoque(cargaSalva);
 
+        return cargaSalva;
     }
 
+    @CacheEvict(value = "cargas", key="#carga.numeroEmbarque")
     public LocalEstoqueDTO gerarResumoLocalEstoque(Carga carga) {
         Map<String, Integer> totaisPorProduto = new HashMap<>();
 
@@ -149,8 +165,8 @@ public class CargaService {
             String codigo = entry.getKey();
             int totalCaixas = entry.getValue();
 
-            Produto produtoCatalogo = produtoRepository.findById(codigo)
-                    .orElseThrow(() -> new RuntimeException("Produto não encontrado: " + codigo));
+            Produto produtoCatalogo = findProdutoByCodigo(codigo)
+                    .orElseThrow(() -> new RuntimeException("Produto não encontrado: " + codigo));//Mensagem formatada na carga para produto não encontrado
 
             int divisor = produtoCatalogo.getQuantCxFd();
             int inteiro = totalCaixas / divisor;

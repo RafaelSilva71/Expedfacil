@@ -1,3 +1,6 @@
+
+** FOI ADICIONADO DEPENDENCIAS DO CAFFEINE, ATUALIZAR O MAVEM **
+
 ## 📦 Endpoints da API ExpedFácil
 
 ### 🔧 Carga
@@ -37,7 +40,7 @@
 
 
 
-
+------------
 CORRETO - PRODUTO
 {
     "id": "006971.93",
@@ -45,8 +48,9 @@ CORRETO - PRODUTO
     "quantPorCaixa": 24,
     "quantCxFd": 126
 }
-CORRETO - CARGA (EXEMPLO COM 3 ENTREGAS)
 
+-------------
+CORRETO - CARGA (EXEMPLO COM 3 ENTREGAS)
 {
 "numeroEmbarque": "270392",
 "destino": "RJ",

@@ -13,7 +13,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/local-estoque")
-public class LocalEstoqueController {
+public class
+LocalEstoqueController {
 
     @Autowired
     private LocalEstoqueProdutoRepository localEstoqueProdutoRepository;

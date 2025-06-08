@@ -39,7 +39,11 @@ public class Carga {
 
     private String placaCavalo;
 
+    //Erro quando estava dando GET na carga
     @ElementCollection
+    @CollectionTable(name = "carga_placas_carreta",
+            joinColumns = @JoinColumn(name = "carga_numero_embarque"))
+    @Column(name = "placa")
     private List<String> placasCarreta;
 
     private String nomeMotorista;
