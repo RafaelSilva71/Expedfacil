@@ -2,7 +2,9 @@ package org.example.expedfacil.mongo;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import com.mongodb.client.gridfs.GridFSFindIterable;
 import org.bson.types.ObjectId;
+import org.example.expedfacil.exception.NotaFiscalNaoEncontradaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.data.mongodb.gridfs.GridFsResource;
@@ -47,6 +49,25 @@ public class ArquivoService {
     public GridFsResource buscarNotaFiscalPorNumeroEmbarque(String numeroEmbarque) {
         Query query = new Query(Criteria.where("metadata.numeroEmbarque").is(numeroEmbarque));
         GridFSFile file = gridFsTemplate.findOne(query);
-        return file != null ? gridFsOperations.getResource(file) : null;
+
+        if (file == null) {
+            throw new NotaFiscalNaoEncontradaException(numeroEmbarque);
+        }
+
+        return gridFsTemplate.getResource(file);
     }
+
+
+    public boolean deletarNotaFiscalPorNumeroEmbarque(String numeroEmbarque) {
+        GridFSFindIterable arquivos = gridFsTemplate.find(Query.query(Criteria.where("metadata.numeroEmbarque").is(numeroEmbarque)));
+        boolean deletado = false;
+
+        for (GridFSFile arquivo : arquivos) {
+            gridFsTemplate.delete(Query.query(Criteria.where("_id").is(arquivo.getObjectId())));
+            deletado = true;
+        }
+
+        return deletado;
+    }
+
 }

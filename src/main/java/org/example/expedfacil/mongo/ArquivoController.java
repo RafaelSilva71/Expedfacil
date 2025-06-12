@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -40,7 +41,6 @@ public class ArquivoController {
             if (arquivo == null || !arquivo.exists()) {
                 return ResponseEntity.notFound().build();
             }
-
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + arquivo.getFilename() + "\"")
                     .contentType(MediaType.parseMediaType(arquivo.getContentType()))
@@ -58,13 +58,27 @@ public class ArquivoController {
             if (arquivo == null || !arquivo.exists()) {
                 return ResponseEntity.notFound().build();
             }
-
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + arquivo.getFilename() + "\"")
                     .contentType(MediaType.parseMediaType(arquivo.getContentType()))
                     .body(new InputStreamResource(arquivo.getInputStream()));
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Erro ao buscar arquivo: " + e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/nota-fiscal/{numeroEmbarque}")
+    public ResponseEntity<String> deletarNotaFiscalPorNumeroEmbarque(@PathVariable String numeroEmbarque) {
+        try {
+            boolean removido = arquivoService.deletarNotaFiscalPorNumeroEmbarque(numeroEmbarque);
+
+            if (removido) {
+                return ResponseEntity.ok("Nota fiscal removida com sucesso para a carga: " + numeroEmbarque);
+            } else {
+                return ResponseEntity.status(404).body("Nenhuma nota fiscal encontrada para o número de embarque: " + numeroEmbarque);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Erro ao deletar a nota fiscal: " + e.getMessage());
         }
     }
 
