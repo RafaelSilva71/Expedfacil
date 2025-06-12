@@ -145,3 +145,9 @@ GET
     desmarca o file ->
     localhost:8080/arquivo/682f7829d3955967e4e366b5 (ID da imagem gerada no postman ou no proprio MongoDB Compass)
 
+Upload com o número de Embarque
+
+POST / GET / DELETE
+
+    localhost:8080/arquivo/nota-fiscal/270392
+
