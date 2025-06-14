@@ -1,6 +1,8 @@
 
 ** FOI ADICIONADO DEPENDENCIAS DO CAFFEINE, ATUALIZAR O MAVEM **
 
+Url apara documentação: http://localhost:8080/swagger-ui/index.html#/
+
 ## 📦 Endpoints da API ExpedFácil
 
 ### 🔧 Carga
@@ -147,7 +149,7 @@ GET
 
 Upload com o número de Embarque
 
-POST / GET / DELETE
+ GET / DELETE
 
     localhost:8080/arquivo/nota-fiscal/270392
 
