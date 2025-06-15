@@ -18,7 +18,6 @@ public class ProdutoConferidoDTO {
     @NotBlank(message = "O nome do produto será preenchido automaticamente")
     private String nomeProduto;
 
-    // Getters e Setters
 
     public String getNomeProduto() {
         return nomeProduto;

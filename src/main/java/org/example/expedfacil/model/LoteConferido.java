@@ -24,7 +24,6 @@ public class LoteConferido {
     @JoinColumn(name = "produto_id", nullable = false)
     private ProdutoConferido produto;
 
-    // Getters e Setters
 
     public Long getId() {
         return id;

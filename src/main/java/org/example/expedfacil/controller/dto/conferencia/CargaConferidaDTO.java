@@ -13,7 +13,7 @@ public class CargaConferidaDTO {
     @NotNull(message = "A lista de entregas conferidas é obrigatória")
     private List<EntregaConferidaDTO> entregasConferidas;
 
-    // Getters e Setters
+
     public String getNumeroEmbarqueOriginal() {
         return numeroEmbarqueOriginal;
     }

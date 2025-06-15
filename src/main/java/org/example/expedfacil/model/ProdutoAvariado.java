@@ -27,7 +27,6 @@ public class ProdutoAvariado {
     @JoinColumn(name = "avaria_carga_id")
     private AvariaCarga avariaCarga;
 
-    // Getters e Setters
 
     public Long getId() {
         return id;

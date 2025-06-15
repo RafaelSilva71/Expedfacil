@@ -13,8 +13,8 @@ public class Produto {
     private String id;
 
     private String nome;
-    private Integer  quantPorCaixa; //quantidade de caixa (lata dentro de uma caixa) (MV DIA% 24/200)
-    private Integer quantCxFd; //CaixaTotal (CX)
+    private Integer  quantPorCaixa; //quantidade por caixa (latas dentro de uma caixa) (MV DIA% 24/200)
+    private Integer quantCxFd; //CaixaTotal (CX) por palete
 
     public Produto() {}
 
