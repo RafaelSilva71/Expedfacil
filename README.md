@@ -83,6 +83,6 @@ Upload com o número de Embarque
 Você pode clonar o projeto diretamente em sua máquina com o comando abaixo:
 
 ```bash
-git clone https://github.com/seu-usuario/nome-do-repositorio.git
+git clone https:https://github.com/RafaelSilva71/Expedfacil.git
 
 
