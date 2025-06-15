@@ -8,8 +8,7 @@ public class CargaConferidaResponseDTO {
     private String numeroEmbarqueOriginal;
     private LocalDateTime dataRegistro;
     private List<EntregaConferidaResponseDTO> entregasConferidas;
-
-    // Getters e Setters
+    
 
     public Long getId() {
         return id;

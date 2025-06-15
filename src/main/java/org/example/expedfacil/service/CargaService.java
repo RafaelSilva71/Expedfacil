@@ -185,7 +185,7 @@ public class CargaService {
             dto.setCodigoProduto(codigo);
             dto.setNomeProduto(produtoCatalogo.getNome());
             dto.setResultado(resultado);
-            dto.setLocalEstoque(null); // ainda não atribuído
+            dto.setLocalEstoque(null);
 
             listaResumo.add(dto);
 
@@ -200,10 +200,9 @@ public class CargaService {
             entidades.add(entidade);
         }
 
-        // 4. Salvar todas as entidades no banco
         localEstoqueProdutoRepository.saveAll(entidades);
 
-        // 5. Retornar o DTO com a lista formatada (opcional, para exibição)
+        // 4. Retornar o DTO com a lista formatada (opcional, para exibição)
         LocalEstoqueDTO localEstoqueDTO = new LocalEstoqueDTO();
         localEstoqueDTO.setNumeroEmbarque(carga.getNumeroEmbarque());
         localEstoqueDTO.setProdutos(listaResumo);

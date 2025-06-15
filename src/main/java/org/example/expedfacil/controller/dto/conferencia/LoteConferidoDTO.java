@@ -17,7 +17,6 @@ public class LoteConferidoDTO {
     private String dataProducao;
 
 
-    // Getters e Setters
 
     public String getDataProducao() {
         return dataProducao;

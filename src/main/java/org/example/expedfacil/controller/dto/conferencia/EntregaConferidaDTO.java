@@ -13,7 +13,7 @@ public class EntregaConferidaDTO {
     @NotNull(message = "A lista de produtos conferidos é obrigatória")
     private List<ProdutoConferidoDTO> produtos;
 
-    // Getters e Setters
+
     public String getNumeroEntrega() {
         return numeroEntrega;
     }

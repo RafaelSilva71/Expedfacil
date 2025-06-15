@@ -3,11 +3,10 @@ package org.example.expedfacil.controller.dto.conferencia.response;
 public class LoteConferidoResponseDTO {
     private Long id;
     private String lote;
-    private String validade;      // alterado para String
-    private String dataProducao;  // alterado para String
+    private String validade;
+    private String dataProducao;
     private Integer quantidade;
 
-    // Getters e Setters
 
     public Long getId() {
         return id;

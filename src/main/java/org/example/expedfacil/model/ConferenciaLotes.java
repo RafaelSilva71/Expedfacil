@@ -23,7 +23,6 @@ public class ConferenciaLotes {
     private List<EntregaConferida> entregasConferidas = new ArrayList<>();
 
 
-    // Getters e Setters
 
     public Long getId() {
         return id;

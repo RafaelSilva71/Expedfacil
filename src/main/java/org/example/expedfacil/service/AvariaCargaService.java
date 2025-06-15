@@ -20,18 +20,18 @@ public class AvariaCargaService {
     private final ProdutoAvariadoRepository produtoAvariadoRepository;
     private final CargaRepository cargaRepository;
     private final ConferenciaLotesRepository conferenciaLotesRepository;
-    private final ProdutoRepository produtoRepository; // ✅ Adicionado
+    private final ProdutoRepository produtoRepository;
 
     public AvariaCargaService(AvariaCargaRepository avariaCargaRepository,
                               ProdutoAvariadoRepository produtoAvariadoRepository,
                               CargaRepository cargaRepository,
                               ConferenciaLotesRepository conferenciaLotesRepository,
-                              ProdutoRepository produtoRepository) { // ✅ No construtor
+                              ProdutoRepository produtoRepository) {
         this.avariaCargaRepository = avariaCargaRepository;
         this.produtoAvariadoRepository = produtoAvariadoRepository;
         this.cargaRepository = cargaRepository;
         this.conferenciaLotesRepository = conferenciaLotesRepository;
-        this.produtoRepository = produtoRepository; // ✅ Atribuído
+        this.produtoRepository = produtoRepository;
     }
 
     @Transactional
@@ -58,7 +58,7 @@ public class AvariaCargaService {
 
             ProdutoAvariado p = new ProdutoAvariado();
             p.setCodigoProduto(dto.getCodigoProduto());
-            p.setNomeProduto(produto.getNome()); // ✅ Nome preenchido automaticamente
+            p.setNomeProduto(produto.getNome());
             p.setLote(dto.getLote());
             p.setQuantidade(dto.getQuantidade());
             p.setMotivo(dto.getMotivo());

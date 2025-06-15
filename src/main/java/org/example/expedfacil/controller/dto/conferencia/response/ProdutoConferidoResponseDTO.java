@@ -9,7 +9,6 @@ public class ProdutoConferidoResponseDTO {
     private Integer quantidadeTotal;
     private List<LoteConferidoResponseDTO> lotes;
 
-    // Getters e Setters
 
     public Long getId() {
         return id;

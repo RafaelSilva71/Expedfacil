@@ -28,7 +28,6 @@ public class ProdutoConferido {
     @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LoteConferido> lotes = new ArrayList<>();
 
-    // Getters e Setters
 
     public Long getId() {
         return id;
