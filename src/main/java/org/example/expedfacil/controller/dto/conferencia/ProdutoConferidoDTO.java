@@ -51,4 +51,6 @@ public class ProdutoConferidoDTO {
     public void setLotes(List<LoteConferidoDTO> lotes) {
         this.lotes = lotes;
     }
+
 }
+

@@ -1,3 +1,8 @@
+
+** FOI ADICIONADO DEPENDENCIAS DO CAFFEINE, ATUALIZAR O MAVEM **
+
+Url apara documentação: http://localhost:8080/swagger-ui/index.html#/
+
 ## 📦 Endpoints da API ExpedFácil
 
 ### 🔧 Carga
@@ -37,7 +42,7 @@
 
 
 
-
+------------
 CORRETO - PRODUTO
 {
     "id": "006971.93",
@@ -45,8 +50,9 @@ CORRETO - PRODUTO
     "quantPorCaixa": 24,
     "quantCxFd": 126
 }
-CORRETO - CARGA (EXEMPLO COM 3 ENTREGAS)
 
+-------------
+CORRETO - CARGA (EXEMPLO COM 3 ENTREGAS)
 {
 "numeroEmbarque": "270392",
 "destino": "RJ",
@@ -140,4 +146,10 @@ GET
 
     desmarca o file ->
     localhost:8080/arquivo/682f7829d3955967e4e366b5 (ID da imagem gerada no postman ou no proprio MongoDB Compass)
+
+Upload com o número de Embarque
+
+ GET / DELETE
+
+    localhost:8080/arquivo/nota-fiscal/270392
 

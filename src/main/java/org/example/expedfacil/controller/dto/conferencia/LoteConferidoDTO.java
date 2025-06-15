@@ -50,4 +50,6 @@ public class LoteConferidoDTO {
     public void setQuantidade(Integer quantidade) {
         this.quantidade = quantidade;
     }
+
 }
+

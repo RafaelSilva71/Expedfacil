@@ -102,10 +102,6 @@ public class ConferenciaController {
                         "Os produtos conferidos na entrega " + numeroEntrega + " não correspondem aos produtos da entrega original.");
             }
         }
-
-
-
-
         for (EntregaConferidaDTO entrega : dto.getEntregasConferidas()) {
             for (ProdutoConferidoDTO produto : entrega.getProdutos()) {
 
@@ -187,7 +183,5 @@ public class ConferenciaController {
         }
     }
 
-
-
-
 }
+

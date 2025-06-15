@@ -29,4 +29,6 @@ public class CargaConferidaDTO {
     public void setEntregasConferidas(List<EntregaConferidaDTO> entregasConferidas) {
         this.entregasConferidas = entregasConferidas;
     }
+
 }
+

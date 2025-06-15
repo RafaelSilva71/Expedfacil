@@ -27,6 +27,5 @@ public class ConferenciaTempStorageService {
     public boolean remover(String numeroEmbarqueOriginal) {
         return armazenamentoTemporario.remove(numeroEmbarqueOriginal) != null;
     }
-
-
 }
+
