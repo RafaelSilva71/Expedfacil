@@ -29,4 +29,6 @@ public class EntregaConferidaDTO {
     public void setProdutos(List<ProdutoConferidoDTO> produtos) {
         this.produtos = produtos;
     }
+
 }
+
