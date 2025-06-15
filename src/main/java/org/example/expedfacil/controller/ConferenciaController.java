@@ -1,12 +1,13 @@
 package org.example.expedfacil.controller;
 
 import org.example.expedfacil.controller.dto.conferencia.*;
+import org.example.expedfacil.controller.dto.conferencia.response.CargaConferidaResponseDTO;
 import org.example.expedfacil.model.Carga;
 import org.example.expedfacil.model.Produto;
 import org.example.expedfacil.model.ProdutoEntrega;
 import org.example.expedfacil.repository.CargaRepository;
 import org.example.expedfacil.repository.ProdutoRepository;
-import org.example.expedfacil.service.ConferenciaTempStorageService;
+import org.example.expedfacil.service.ConferenciaLotesService;
 import org.example.expedfacil.util.ConversorLoteUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,169 +18,162 @@ import java.util.List;
 import jakarta.validation.Valid;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/conferencia")
 public class ConferenciaController {
 
     private final ProdutoRepository produtoRepository;
-    private final ConferenciaTempStorageService tempStorageService;
+    private final ConferenciaLotesService conferenciaLotesService;
     private final CargaRepository cargaRepository;
 
     public ConferenciaController(ProdutoRepository produtoRepository,
-                                 ConferenciaTempStorageService tempStorageService,
+                                 ConferenciaLotesService conferenciaLotesService,
                                  CargaRepository cargaRepository) {
         this.produtoRepository = produtoRepository;
-        this.tempStorageService = tempStorageService;
+        this.conferenciaLotesService = conferenciaLotesService;
         this.cargaRepository = cargaRepository;
     }
 
+    // Endpoint para registrar a conferência de lotes
     @PostMapping("/lotes")
     public ResponseEntity<?> registrarConferenciaDeLotes(
             @Valid @RequestBody CargaConferidaDTO dto) {
 
-        // Buscar a carga original pelo número do embarque
+        // Busca a carga original no banco
         Carga cargaOriginal = cargaRepository.findByNumeroEmbarque(dto.getNumeroEmbarqueOriginal())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Carga com número " + dto.getNumeroEmbarqueOriginal() + " não encontrada."));
 
-        // Extrair os números de entrega da carga original
+        // Lista os números de entrega da carga original e da conferência recebida
         List<String> entregasOriginais = cargaOriginal.getEntregas().stream()
                 .map(entrega -> String.valueOf(entrega.getNumeroEntrega()))
                 .toList();
 
-        // Extrair os números de entrega da conferência recebida
         List<String> entregasConferidas = dto.getEntregasConferidas().stream()
                 .map(EntregaConferidaDTO::getNumeroEntrega)
                 .toList();
 
-        // Validação 1: quantidade total de entregas deve bater
+        // Validação 1: quantidade de entregas deve bater
         if (entregasConferidas.size() != entregasOriginais.size()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Número de entregas conferidas (" + entregasConferidas.size() +
-                            ") não bate com o número de entregas da carga (" + entregasOriginais.size() + ").");
+                    "Número de entregas conferidas não bate com a carga original.");
         }
 
-        // Validação 2: cada entrega enviada deve existir na carga original
+        // Validação 2: cada entrega enviada deve pertencer à carga original
         for (String entregaEnviada : entregasConferidas) {
             if (!entregasOriginais.contains(entregaEnviada)) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                        "A entrega número '" + entregaEnviada + "' não pertence à carga " + dto.getNumeroEmbarqueOriginal());
+                        "Entrega número '" + entregaEnviada + "' não pertence à carga.");
             }
         }
 
-        // Validação 3: cada entrega deve conter exatamente os mesmos produtos que a entrega original
+        // Validação 3: cada entrega deve conter exatamente os mesmos produtos da carga original
         for (EntregaConferidaDTO entregaConferida : dto.getEntregasConferidas()) {
             Integer numeroEntrega = Integer.valueOf(entregaConferida.getNumeroEntrega());
 
-
-            // Buscar a entrega correspondente na carga original
             var entregaOriginal = cargaOriginal.getEntregas().stream()
                     .filter(e -> e.getNumeroEntrega().equals(numeroEntrega))
                     .findFirst()
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                            "Entrega número " + numeroEntrega + " não encontrada na carga."));
+                            "Entrega número " + numeroEntrega + " não encontrada."));
 
-            // Extrair códigos dos produtos da entrega original
             List<String> codigosOriginais = entregaOriginal.getProdutos().stream()
                     .map(ProdutoEntrega::getCodigoProduto)
                     .filter(codigo -> codigo != null)
                     .sorted()
                     .toList();
 
-            // Extrair códigos dos produtos conferidos
             List<String> codigosConferidos = entregaConferida.getProdutos().stream()
                     .map(ProdutoConferidoDTO::getCodigoProduto)
                     .filter(codigo -> codigo != null)
                     .sorted()
                     .toList();
 
-            // Comparar listas
             if (!codigosOriginais.equals(codigosConferidos)) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                        "Os produtos conferidos na entrega " + numeroEntrega + " não correspondem aos produtos da entrega original.");
+                        "Produtos conferidos na entrega " + numeroEntrega + " não correspondem aos originais.");
             }
         }
+
+        // Validação por produto: nome, soma dos lotes e validade
         for (EntregaConferidaDTO entrega : dto.getEntregasConferidas()) {
             for (ProdutoConferidoDTO produto : entrega.getProdutos()) {
 
-                // Buscar nome do produto no banco de dados
+                // Preenche automaticamente o nome do produto
                 Produto produtoEncontrado = produtoRepository.findById(produto.getCodigoProduto())
                         .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
                                 "Produto com código " + produto.getCodigoProduto() + " não encontrado."));
-
-                // Setar nome automaticamente no DTO
                 produto.setNomeProduto(produtoEncontrado.getNome());
 
-                // Validar se soma dos lotes bate com a quantidade total
+                // Valida se a soma das quantidades dos lotes bate com a quantidade total
                 int soma = produto.getLotes().stream()
                         .mapToInt(LoteConferidoDTO::getQuantidade)
                         .sum();
-
                 if (soma != produto.getQuantidadeTotal()) {
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                             "Quantidade total do produto " + produto.getCodigoProduto()
                                     + " não bate com a soma dos lotes.");
                 }
 
-                // Validar e preencher a data de produção de cada lote
+                // Validação de cada lote
                 for (LoteConferidoDTO lote : produto.getLotes()) {
                     LocalDate dataProducao = ConversorLoteUtil.converterParaDataProducao(lote.getLote());
 
                     if (dataProducao.isAfter(LocalDate.now())) {
                         throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                                "Lote " + lote.getLote() + " possui data de produção futura: "
-                                        + dataProducao.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+                                "Lote " + lote.getLote() + " possui data de produção futura.");
                     }
 
-                    // Validar se a data de validade foi informada corretamente
+                    // Validação da data de validade
                     if (lote.getValidade() == null || lote.getValidade().isBlank()) {
                         throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                                "Data de validade do lote " + lote.getLote() + " está ausente ou inválida.");
+                                "Validade do lote " + lote.getLote() + " está ausente.");
                     }
 
-                    // Verificar se a validade é igual ou maior que hoje
                     LocalDate validade;
                     try {
                         validade = LocalDate.parse(lote.getValidade(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
                     } catch (Exception e) {
                         throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                                "Formato inválido para a data de validade do lote " + lote.getLote() + ". Use dd/MM/yyyy.");
+                                "Formato inválido para validade do lote " + lote.getLote());
                     }
 
                     if (validade.isBefore(LocalDate.now())) {
                         throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                                "Data de validade do lote " + lote.getLote() + " está vencida: "
-                                        + lote.getValidade());
+                                "Lote " + lote.getLote() + " está com validade vencida.");
                     }
 
-                    // Setar a data de produção formatada
+                    // Salva a data de produção no DTO
                     lote.setDataProducao(dataProducao.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
                 }
             }
         }
 
-        // Salvar a conferência temporariamente na memória
-        tempStorageService.salvar(dto.getNumeroEmbarqueOriginal(), dto);
+        // Salva a conferência no banco de dados
+        conferenciaLotesService.salvar(dto.getNumeroEmbarqueOriginal(), dto);
 
         return ResponseEntity.ok("Conferência de lotes registrada com sucesso.");
     }
 
+    // Lista todas as conferências salvas no banco
     @GetMapping("/lotes")
-    public ResponseEntity<?> listarConferenciasTemporarias() {
-        Map<String, CargaConferidaDTO> todas = tempStorageService.listarTodas();
-        return ResponseEntity.ok(todas);
+    public ResponseEntity<?> listarConferenciasSalvas() {
+        List<CargaConferidaResponseDTO> dtos = conferenciaLotesService.listarTodas();
+        return ResponseEntity.ok(dtos);
     }
 
+
+    // Deleta a conferência pelo número do embarque
     @DeleteMapping("/lotes/{numeroEmbarqueOriginal}")
-    public ResponseEntity<?> deletarConferenciaTemporaria(@PathVariable String numeroEmbarqueOriginal) {
-        boolean removido = tempStorageService.remover(numeroEmbarqueOriginal);
+    public ResponseEntity<?> deletarConferencia(@PathVariable String numeroEmbarqueOriginal) {
+        boolean removido = conferenciaLotesService.remover(numeroEmbarqueOriginal);
+
         if (removido) {
-            return ResponseEntity.ok("Conferência temporária removida com sucesso.");
+            return ResponseEntity.ok("Conferência removida com sucesso.");
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nenhuma conferência encontrada para o embarque informado.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Nenhuma conferência encontrada para o embarque informado.");
         }
     }
 
