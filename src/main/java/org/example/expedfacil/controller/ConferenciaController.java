@@ -1,5 +1,11 @@
 package org.example.expedfacil.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.media.Content;
+
 import org.example.expedfacil.controller.dto.conferencia.*;
 import org.example.expedfacil.controller.dto.conferencia.response.CargaConferidaResponseDTO;
 import org.example.expedfacil.model.Carga;
@@ -9,18 +15,21 @@ import org.example.expedfacil.repository.CargaRepository;
 import org.example.expedfacil.repository.ProdutoRepository;
 import org.example.expedfacil.service.ConferenciaLotesService;
 import org.example.expedfacil.util.ConversorLoteUtil;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import java.util.List;
 
 import jakarta.validation.Valid;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @RestController
 @RequestMapping("/conferencia")
+@Tag(name = "Conferência de Lotes", description = "APIs para gerenciar conferência de lotes")
 public class ConferenciaController {
 
     private final ProdutoRepository produtoRepository;
@@ -35,7 +44,15 @@ public class ConferenciaController {
         this.cargaRepository = cargaRepository;
     }
 
-    // Endpoint para registrar a conferência de lotes
+    @Operation(
+            summary = "Registrar conferência de lotes",
+            description = "Registra a conferência de lotes para uma carga existente",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Conferência de lotes registrada com sucesso"),
+                    @ApiResponse(responseCode = "400", description = "Dados inválidos ou inconsistentes"),
+                    @ApiResponse(responseCode = "404", description = "Carga não encontrada", content = @Content)
+            }
+    )
     @PostMapping("/lotes")
     public ResponseEntity<?> registrarConferenciaDeLotes(
             @Valid @RequestBody CargaConferidaDTO dto) {
@@ -156,17 +173,24 @@ public class ConferenciaController {
         return ResponseEntity.ok("Conferência de lotes registrada com sucesso.");
     }
 
-    // Lista todas as conferências salvas no banco
+    @Operation(summary = "Listar todas as conferências salvas",
+            description = "Retorna todas as conferências registradas no sistema")
     @GetMapping("/lotes")
     public ResponseEntity<?> listarConferenciasSalvas() {
         List<CargaConferidaResponseDTO> dtos = conferenciaLotesService.listarTodas();
         return ResponseEntity.ok(dtos);
     }
 
-
-    // Deleta a conferência pelo número do embarque
+    @Operation(summary = "Deletar a conferência pelo número do embarque",
+            description = "Remove uma conferência salva pelo número do embarque original",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Conferência removida com sucesso"),
+                    @ApiResponse(responseCode = "404", description = "Conferência não encontrada")
+            })
     @DeleteMapping("/lotes/{numeroEmbarqueOriginal}")
-    public ResponseEntity<?> deletarConferencia(@PathVariable String numeroEmbarqueOriginal) {
+    public ResponseEntity<?> deletarConferencia(
+            @Parameter(description = "Número do embarque original da conferência a ser removida", required = true)
+            @PathVariable String numeroEmbarqueOriginal) {
         boolean removido = conferenciaLotesService.remover(numeroEmbarqueOriginal);
 
         if (removido) {
@@ -176,6 +200,4 @@ public class ConferenciaController {
                     .body("Nenhuma conferência encontrada para o embarque informado.");
         }
     }
-
 }
-
