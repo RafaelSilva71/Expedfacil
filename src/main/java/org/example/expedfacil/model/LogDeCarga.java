@@ -1,4 +1,4 @@
-package org.example.expedfacil.mongo;
+package org.example.expedfacil.model;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 

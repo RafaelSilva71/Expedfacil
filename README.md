@@ -1,3 +1,8 @@
+
+** FOI ADICIONADO DEPENDENCIAS DO CAFFEINE, ATUALIZAR O MAVEM **
+
+Url apara documentação: http://localhost:8080/swagger-ui/index.html#/
+
 ## 📦 Endpoints da API ExpedFácil
 
 ### 🔧 Carga
@@ -37,7 +42,7 @@
 
 
 
-
+------------
 CORRETO - PRODUTO
 {
     "id": "006971.93",
@@ -45,6 +50,8 @@ CORRETO - PRODUTO
     "quantPorCaixa": 24,
     "quantCxFd": 126
 }
+
+
 Lista de produtos necessárioa para a carga:
 {
 "id": "005603.94",
@@ -86,88 +93,6 @@ Lista de produtos necessárioa para a carga:
 
 CORRETO - CARGA (EXEMPLO COM 3 ENTREGAS)
 
-{
-"numeroEmbarque": "270392",
-"destino": "RJ",
-"numeroEntregas": 3,
-"tipoCarregamento": "BATIDA",
-"transportadora": "Rodo WD",
-"tipoVeiculo": "BAU",
-"placaCavalo": "AVN-8786",
-"placasCarreta": [],
-"nomeMotorista": "Henrique",
-"tipoCarga": "CLIENTE",
-"entregas": [
-{
-"destinatario": "Clientes Itaguai-RJ",
-"observacao": "",
-"tipoEntrega": "CLIENTE",
-"pesoLiquido": 5724.0,
-"pesoBruto": 10729.0,
-"produtos": [
-{
-"codigoProduto": "005401.96",
-"quantidadeCaixas": 55
-},
-{
-"codigoProduto": "005402.94",
-"quantidadeCaixas": 135
-},
-{
-"codigoProduto": "005403.94",
-"quantidadeCaixas": 115
-},
-{
-"codigoProduto": "005601.96",
-"quantidadeCaixas": 50
-},
-{
-"codigoProduto": "005602.94",
-"quantidadeCaixas": 365
-},
-{
-"codigoProduto": "005603.94",
-"quantidadeCaixas": 70
-}
-]
-},
-{
-"destinatario": "Box 34 Comercio",
-"observacao": "",
-"tipoEntrega": "CLIENTE",
-"pesoLiquido": 2880.0,
-"pesoBruto": 5541.12,
-"produtos": [
-{
-"codigoProduto": "005402.94",
-"quantidadeCaixas": 160
-},
-{
-"codigoProduto": "005602.94",
-"quantidadeCaixas": 320
-}
-]
-},
-{
-"destinatario": "Box 81 Distribuidora",
-"observacao": "",
-"tipoEntrega": "CLIENTE",
-"pesoLiquido": 4320.0,
-"pesoBruto": 8311.68,
-"produtos": [
-{
-"codigoProduto": "005402.94",
-"quantidadeCaixas": 240
-},
-{
-"codigoProduto": "005602.94",
-"quantidadeCaixas": 480
-}
-]
-}
-]
-}
-=======
 MongoDB------
 POST
  crud-produto
@@ -179,4 +104,10 @@ GET
 
     desmarca o file ->
     localhost:8080/arquivo/682f7829d3955967e4e366b5 (ID da imagem gerada no postman ou no proprio MongoDB Compass)
+
+Upload com o número de Embarque
+
+ GET / DELETE
+
+    localhost:8080/arquivo/nota-fiscal/270392
 

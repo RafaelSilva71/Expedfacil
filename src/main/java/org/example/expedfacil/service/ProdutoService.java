@@ -2,14 +2,10 @@ package org.example.expedfacil.service;
 
 import org.example.expedfacil.controller.dto.CreateProdutoDTO;
 import org.example.expedfacil.controller.dto.UpdateProdutoDTO;
+import org.example.expedfacil.exception.ProdutoJaExisteException;
 import org.example.expedfacil.model.Produto;
 import org.example.expedfacil.repository.ProdutoRepository;
 import org.springframework.stereotype.Service;
-
-
-
-import java.text.DecimalFormat;
-import java.time.Instant;
 
 import java.util.List;
 
@@ -23,10 +19,9 @@ public class ProdutoService {
     }
 
     public Produto createProduto(CreateProdutoDTO createProdutoDTO) {
-        DecimalFormat df = new DecimalFormat("000000.00");
-        String codigoFormatado = df.format(Double.parseDouble(createProdutoDTO.id()));
-
-        //DTO -> entity
+        if (produtoRepository.existsById(createProdutoDTO.id())) {
+            throw new ProdutoJaExisteException(createProdutoDTO.id());
+        }
 
         var entity = new Produto(
                 createProdutoDTO.id(),
@@ -46,16 +41,13 @@ public class ProdutoService {
         return produtoRepository.findAll();
     }
 
-
     public void updateProduto(String id, UpdateProdutoDTO dto) {
         Produto produto = produtoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
 
-
         produto.setNome(dto.nome());
         produto.setQuantPorCaixa(dto.quantPorCaixa());
         produto.setQuantCxFd(dto.quantCxFd());
-
 
         produtoRepository.save(produto);
     }
@@ -63,5 +55,4 @@ public class ProdutoService {
     public void deleteById(String id) {
         produtoRepository.deleteById(id);
     }
-
 }
