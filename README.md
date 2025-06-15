@@ -1,99 +1,67 @@
+# Sistema de Conferência de Cargas - ExpedFácil 🚛📦
 
-** FOI ADICIONADO DEPENDENCIAS DO CAFFEINE, ATUALIZAR O MAVEM **
+Sistema desenvolvido para automatizar e digitalizar o processo de conferência de cargas na expedição da empresa **Oderich – Unidade Orizona**, substituindo controles manuais em papel por uma solução eficiente, rastreável e segura.
+
+## 📌 Objetivo Geral
+
+Automatizar os processos da expedição, garantindo:
+
+- Redução de erros
+- Maior agilidade
+- Rastreabilidade das operações
+- Segurança e integridade das informações
+
+## 👥 Público Alvo
+
+- Encarregados de expedição  
+- Estoquistas  
+- Conferentes  
+- Operadores de empilhadeira  
+- Supervisores e visualizadores
+
+Todos os colaboradores da expedição poderão interagir com o sistema, via computadores ou tablets (Android), conforme seu perfil de acesso.
+
+## ⚙️ Principais Funcionalidades
+
+- Definição de tipo de carregamento
+- Cálculo automático de paletes e sobras
+- Registro de avarias com foto
+- Captura de fotos da carga 
+- Anexação e verificação de notas fiscais via foto
+- Histórico completo por etapa 
+
+
+
+## 🚧 Possíveis Desafios
+
+- Treinamento dos usuários
+- Necessidade de infraestrutura (rede + dispositivos)
+- Manutenção contínua e suporte técnico
+
+## 👨‍💻 Equipe de Desenvolvimento
+
+| Nome                      | Função                                               
+|---------------------------|---------------------------------------------------------------------|
+| **Ricardo Issa de Sousa** | Desenvolvedor                       
+| **Erick Gonçalves Maia**  | Desenvolvedor    
+| **Rafael de Oliveira**    | Desenvolvedor                             
+
+### Metodologia: Scrum
+
+O desenvolvimento seguiu a abordagem ágil Scrum, com sprints curtos, entregas contínuas e foco na validação progressiva com o cliente.
+
+
+
+
+## 📝 Licença
+
+Este projeto é acadêmico e sem fins lucrativos. Todos os direitos reservados ao IF Goiano - Campus Urutaí.
+
+
 
 Url apara documentação: http://localhost:8080/swagger-ui/index.html#/
 
-## 📦 Endpoints da API ExpedFácil
-
-### 🔧 Carga
-
-| Método | Endpoint         | Descrição                                                    |
-|--------|------------------|--------------------------------------------------------------|
-| POST   | `/carga`         | Cria uma nova carga com entregas e produtos                 |
-| GET    | `/carga`         | Lista todas as cargas cadastradas                           |
-| GET    | `/carga/{id}`    | Retorna os detalhes completos de uma carga específica       |
-| DELETE | `/carga/{id}`    | Remove uma carga existente pelo número de embarque          |
-
----
-
-### 📍 Local de Estoque
-
-| Método | Endpoint                                   | Descrição                                                                 |
-|--------|--------------------------------------------|---------------------------------------------------------------------------|
-| GET    | `/local-estoque`                           | Lista todos os produtos de todas as cargas com cálculo de estoque         |
-| GET    | `/local-estoque/carga/{numeroEmbarque}`    | Lista os produtos com cálculo de uma carga específica                     |
-| PUT    | `/local-estoque/{id}`                      | Atualiza manualmente o campo `localEstoque` de um produto (texto simples) |
-
----
-
-### 🧾 Produto (Catálogo)
-
-| Método | Endpoint             | Descrição                                                       |
-|--------|----------------------|------------------------------------------------------------------|
-| POST   | `/Produto`           | Cadastra um novo produto individual no catálogo                 |
-| GET    | `/Produto`           | Lista todos os produtos cadastrados no catálogo                 |
-| GET    | `/Produto/{id}`      | Retorna os detalhes de um produto pelo ID                       |
-| PUT    | `/Produto/{id}`      | Atualiza um produto existente com base no ID                    |
-| DELETE | `/Produto/{id}`      | Remove um produto do catálogo pelo ID                           |
-
-
-
-
-
-
-
-------------
-CORRETO - PRODUTO
-{
-    "id": "006971.93",
-    "nome": "MV DIA% 24/200 (ARGENTINA) (CX2)",
-    "quantPorCaixa": 24,
-    "quantCxFd": 126
-}
-
-
-Lista de produtos necessárioa para a carga:
-{
-"id": "005603.94",
-"nome": "MV ODERICH 6/2000 (CX)",
-"quantPorCaixa": 6,
-"quantCxFd": 56
-}
-{
-"id": "005403.94",
-"nome": "ERV ODERICH 6/2000 (CX)",
-"quantPorCaixa": 6,
-"quantCxFd": 56
-}
-{
-"id": "005602.94",
-"nome": "MV ODERICH 12/500 (CX)",
-"quantPorCaixa": 12,
-"quantCxFd": 110
-}
-{
-"id": "005402.94",
-"nome": "ERV ODERICH 12/500 (CX)",
-"quantPorCaixa": 12,
-"quantCxFd": 110
-}
-{
-"id": "005601.96",
-"nome": "MV ODERICH 24/200 (FD)",
-"quantPorCaixa": 24,
-"quantCxFd": 140
-}
-{
-"id": "005401.96",
-"nome": "ERV ODERICH 24/200 (FD)",
-"quantPorCaixa": 24,
-"quantCxFd": 140
-}
-
-
-CORRETO - CARGA (EXEMPLO COM 3 ENTREGAS)
-
-MongoDB------
+## MongoDB
 POST
  crud-produto
 
@@ -104,10 +72,17 @@ GET
 
     desmarca o file ->
     localhost:8080/arquivo/682f7829d3955967e4e366b5 (ID da imagem gerada no postman ou no proprio MongoDB Compass)
-
 Upload com o número de Embarque
 
  GET / DELETE
 
     localhost:8080/arquivo/nota-fiscal/270392
+
+## 📎 Clone o Projeto
+
+Você pode clonar o projeto diretamente em sua máquina com o comando abaixo:
+
+```bash
+git clone https://github.com/seu-usuario/nome-do-repositorio.git
+
 
