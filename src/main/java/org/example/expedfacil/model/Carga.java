@@ -44,7 +44,7 @@ public class Carga {
     @ElementCollection
     @CollectionTable(name = "carga_placas_carreta",
             joinColumns = @JoinColumn(name = "carga_numero_embarque"))
-    @Column(name = "placa")
+    @Column(name = "placas_carreta")
     private List<String> placasCarreta = new ArrayList<>();
 
     private String nomeMotorista;

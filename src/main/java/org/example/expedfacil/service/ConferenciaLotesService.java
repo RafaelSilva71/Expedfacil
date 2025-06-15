@@ -1,16 +1,12 @@
 package org.example.expedfacil.service;
 
 import org.example.expedfacil.controller.dto.conferencia.*;
-import org.example.expedfacil.controller.dto.conferencia.response.CargaConferidaResponseDTO;
-import org.example.expedfacil.controller.dto.conferencia.response.EntregaConferidaResponseDTO;
-import org.example.expedfacil.controller.dto.conferencia.response.LoteConferidoResponseDTO;
-import org.example.expedfacil.controller.dto.conferencia.response.ProdutoConferidoResponseDTO;
+import org.example.expedfacil.controller.dto.conferencia.response.*;
 import org.example.expedfacil.model.*;
 import org.example.expedfacil.repository.ConferenciaLotesRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -44,16 +40,12 @@ public class ConferenciaLotesService {
                 List<LoteConferido> lotes = produtoDTO.getLotes().stream().map(loteDTO -> {
                     LoteConferido lote = new LoteConferido();
                     lote.setLote(loteDTO.getLote());
-                    lote.setValidade(loteDTO.getValidade()); // mantém como String
+                    lote.setValidade(loteDTO.getValidade());
+                    lote.setDataProducao(loteDTO.getDataProducao());
                     lote.setQuantidade(loteDTO.getQuantidade());
-
-                    lote.setDataProducao(loteDTO.getDataProducao()); // mantém como String também
-
                     lote.setProduto(produto);
                     return lote;
                 }).collect(Collectors.toList());
-
-
 
                 produto.setLotes(lotes);
                 return produto;
@@ -108,15 +100,11 @@ public class ConferenciaLotesService {
                     LoteConferidoResponseDTO loteDTO = new LoteConferidoResponseDTO();
                     loteDTO.setId(lote.getId());
                     loteDTO.setLote(lote.getLote());
-
-                    // Passa direto a String da entidade (sem conversão)
                     loteDTO.setValidade(lote.getValidade());
                     loteDTO.setDataProducao(lote.getDataProducao());
-
                     loteDTO.setQuantidade(lote.getQuantidade());
                     return loteDTO;
                 }).collect(Collectors.toList());
-
 
                 produtoDTO.setLotes(lotesDTO);
                 return produtoDTO;
@@ -128,5 +116,21 @@ public class ConferenciaLotesService {
 
         dto.setEntregasConferidas(entregasDTO);
         return dto;
+    }
+
+    public List<CargaConferidaResumoDTO> listarResumo() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
+        return repository.findAll().stream()
+                .map(conferencia -> {
+                    CargaConferidaResumoDTO resumo = new CargaConferidaResumoDTO();
+                    resumo.setNumeroEmbarqueConferido(conferencia.getId() != null ? conferencia.getId().toString() : "");
+                    resumo.setNumeroEmbarqueOriginal(conferencia.getNumeroEmbarqueOriginal());
+                    resumo.setDataRegistro(conferencia.getDataRegistro() != null
+                            ? conferencia.getDataRegistro().format(formatter) : "N/A");
+                    resumo.setStatus("CONFERENCIA_EXTERNA");
+                    return resumo;
+                })
+                .collect(Collectors.toList());
     }
 }

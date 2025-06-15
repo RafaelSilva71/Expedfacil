@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 
 import org.example.expedfacil.controller.dto.conferencia.*;
 import org.example.expedfacil.controller.dto.conferencia.response.CargaConferidaResponseDTO;
+import org.example.expedfacil.controller.dto.conferencia.response.CargaConferidaResumoDTO;
 import org.example.expedfacil.model.Carga;
 import org.example.expedfacil.model.Produto;
 import org.example.expedfacil.model.ProdutoEntrega;
@@ -20,6 +21,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 import jakarta.validation.Valid;
 
@@ -29,7 +33,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/conferencia")
-@Tag(name = "Conferência de Lotes", description = "APIs para gerenciar conferência de lotes")
+@Tag(name = "Conferência de Lotes", description = "Toda a parte para gerenciar conferência de lotes")
 public class ConferenciaController {
 
     private final ProdutoRepository produtoRepository;
@@ -176,9 +180,17 @@ public class ConferenciaController {
     @Operation(summary = "Listar todas as conferências salvas",
             description = "Retorna todas as conferências registradas no sistema")
     @GetMapping("/lotes")
-    public ResponseEntity<?> listarConferenciasSalvas() {
-        List<CargaConferidaResponseDTO> dtos = conferenciaLotesService.listarTodas();
-        return ResponseEntity.ok(dtos);
+    public CollectionModel<EntityModel<CargaConferidaResponseDTO>> listarComLinks() {
+        List<CargaConferidaResponseDTO> lista = conferenciaLotesService.listarTodas();
+
+        List<EntityModel<CargaConferidaResponseDTO>> recursos = lista.stream()
+                .map(dto -> EntityModel.of(dto,
+                        linkTo(methodOn(CargaController.class).buscarPorId(dto.getNumeroEmbarqueOriginal())).withRel("carga")
+                ))
+                .toList();
+
+        return CollectionModel.of(recursos,
+                linkTo(methodOn(ConferenciaController.class).listarComLinks()).withSelfRel());
     }
 
     @Operation(summary = "Deletar a conferência pelo número do embarque",
@@ -200,4 +212,50 @@ public class ConferenciaController {
                     .body("Nenhuma conferência encontrada para o embarque informado.");
         }
     }
+    @Operation(summary = "Listar resumo das cargas conferidas",
+            description = "Retorna uma visão resumida das cargas conferidas com links HATEOAS")
+    @GetMapping("/lotes/resumo")
+    public ResponseEntity<CollectionModel<CargaConferidaResumoDTO>> listarResumo() {
+        List<CargaConferidaResumoDTO> lista = conferenciaLotesService.listarResumo();
+
+        lista.forEach(dto -> {
+            dto.add(linkTo(methodOn(ConferenciaController.class)
+                    .buscarPorNumeroEmbarque(dto.getNumeroEmbarqueOriginal()))
+                    .withSelfRel());
+
+            dto.add(linkTo(methodOn(CargaController.class)
+                    .buscarPorId(dto.getNumeroEmbarqueOriginal()))
+                    .withRel("carga"));
+
+            dto.add(linkTo(methodOn(ConferenciaController.class)
+                    .listarComLinks())
+                    .withRel("lista-completa"));
+        });
+
+        return ResponseEntity.ok(CollectionModel.of(lista,
+                linkTo(methodOn(ConferenciaController.class).listarResumo()).withSelfRel()));
+    }
+
+
+    @Operation(summary = "Buscar conferência por número de embarque original",
+            description = "Retorna os dados completos da conferência associada ao número de embarque original")
+    @GetMapping("/lotes/{numeroEmbarqueOriginal}")
+    public ResponseEntity<EntityModel<CargaConferidaResponseDTO>> buscarPorNumeroEmbarque(
+            @Parameter(description = "Número do embarque original", required = true)
+            @PathVariable String numeroEmbarqueOriginal) {
+
+        var conferencia = conferenciaLotesService.buscar(numeroEmbarqueOriginal)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Conferência com número " + numeroEmbarqueOriginal + " não encontrada."));
+
+        CargaConferidaResponseDTO dto = conferenciaLotesService.toDTO(conferencia);
+
+        EntityModel<CargaConferidaResponseDTO> recurso = EntityModel.of(dto,
+                linkTo(methodOn(this.getClass()).buscarPorNumeroEmbarque(numeroEmbarqueOriginal)).withSelfRel(),
+                linkTo(methodOn(CargaController.class).buscarPorId(numeroEmbarqueOriginal)).withRel("carga")
+        );
+
+        return ResponseEntity.ok(recurso);
+    }
+
 }
